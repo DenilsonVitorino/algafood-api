@@ -1,15 +1,15 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +24,8 @@ import com.algaworks.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.input.PedidoInput;
+import com.algaworks.algafood.apiopenapi.controller.PedidoControllerOpenApi;
+import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exeption.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exeption.NegocioException;
@@ -35,9 +37,12 @@ import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
-@RequestMapping("/pedidos")
-public class PedidoController {
+@RequestMapping(path = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PedidoController implements PedidoControllerOpenApi {
 	
 	@Autowired
 	private PedidoRepository pedidoRepository;
@@ -53,6 +58,9 @@ public class PedidoController {
 	
 	@Autowired
 	private PedidoInputDisassembler pedidoInputDisassembler;
+	
+	@Autowired
+	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 	
 	/*@GetMapping
 	public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
@@ -74,23 +82,20 @@ public class PedidoController {
 		return pedidosWrapper;
 	}*/
 	
+	@Override	
 	@GetMapping
-	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+	public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
 		
-		pageable = traduzirPageable(pageable);
-		
-		Page<Pedido> pedidosPage = pedidoRepository
-				.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
-		
-		List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler
-				.toCollectionModel(pedidosPage.getContent());
-		
-		Page<PedidoResumoModel> pedidosResumoModelPage = new PageImpl<>(
-				pedidosResumoModel, pageable, pedidosPage.getTotalElements());
-		
-		return pedidosResumoModelPage;				
+		Pageable pageableTraduzido = traduzirPageable(pageable);
+	    
+	    Page<Pedido> pedidosPage = pedidoRepository.findAll(
+	            PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+	    
+	    pedidosPage = new PageWrapper<>(pedidosPage, pageable);
+	    
+	    return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);				
 	}
-	
+
 	@GetMapping("/{codigoPedido}")
 	public PedidoModel buscar(@PathVariable String codigoPedido) {
 		Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);

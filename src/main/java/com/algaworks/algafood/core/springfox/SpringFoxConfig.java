@@ -1,11 +1,17 @@
-package com.algaworks.algafood.core.openapi;
+package com.algaworks.algafood.core.springfox;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,8 +22,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.algaworks.algafood.api.exeptionhandler.Problem;
 import com.algaworks.algafood.api.model.CozinhaModel;
+import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.apiopenapi.model.CozinhasModelOpenApi;
 import com.algaworks.algafood.apiopenapi.model.PageableModelOpenApi;
+import com.algaworks.algafood.apiopenapi.model.PedidosResumoModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -58,15 +66,34 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 		            .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
 		            .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
 		            .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+		            /*.globalOperationParameters(Arrays.asList(
+		            		new ParameterBuilder()
+		            			.name("campos")
+		            			.description("Nomes da propriedades para filtrar na resposta, separados por vírgula")
+		            			.parameterType("query")
+		            			.modelRef(new ModelRef("string"))
+		            			.build()))*/
 		            .additionalModels(typeResolver.resolve(Problem.class))
-		            .ignoredParameterTypes(ServletWebRequest.class)
+		            .ignoredParameterTypes(ServletWebRequest.class,
+		            		URL.class, URI.class, URLStreamHandler.class, Resource.class,
+		            		File.class, InputStream.class)
 		            .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
 		            .alternateTypeRules(AlternateTypeRules
 		            		.newRule(typeResolver.resolve(Page.class, CozinhaModel.class), CozinhasModelOpenApi.class))
+		            .alternateTypeRules(AlternateTypeRules.newRule(
+		                    typeResolver.resolve(Page.class, PedidoResumoModel.class),
+		                    PedidosResumoModelOpenApi.class))
 					.apiInfo(apiInfo())
 					.tags(new Tag("Cidades", "Gerencia as cidades"),
 							new Tag("Grupos","Gerencia os grupos de usuários"),
-							new Tag("Cozinhas", "Gerencia as cozinhas"));
+							new Tag("Cozinhas", "Gerencia as cozinhas"),
+							new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+							new Tag("Pedidos", "Gerencia os pedidos"),
+							new Tag("Restaurantes", "Gerencia os restaurantes"),
+							new Tag("Estados", "Gerencia os estados"),
+							new Tag("Produtos", "Gerencia os produtos de restaurantes"),
+							new Tag("Usuários", "Gerencia os usuários"),
+							new Tag("Estatísticas", "Estatísticas da AlgaFood"));
 	}
 	
 	private List<ResponseMessage> globalGetResponseMessages() {

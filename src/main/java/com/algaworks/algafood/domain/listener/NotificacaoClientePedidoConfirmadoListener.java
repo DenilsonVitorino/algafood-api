@@ -12,7 +12,7 @@ import com.algaworks.algafood.domain.service.EnvioEmailService.Mensagem;
 @Component
 public class NotificacaoClientePedidoConfirmadoListener {
 	
-	@Autowired
+	@Autowired 
 	private EnvioEmailService envioEmail;
 	
 	@TransactionalEventListener
