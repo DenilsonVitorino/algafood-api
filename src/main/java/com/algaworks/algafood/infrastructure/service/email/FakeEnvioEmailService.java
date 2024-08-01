@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FakeEnvioEmailService extends SmtpEnvioEmailService {
 
-	@Override
+	/*@Override
 	public void enviar(Mensagem mensagem) {
 		
 		// Foi necessário alterar o modificador de acesso do método processarTemplate
@@ -14,5 +14,5 @@ public class FakeEnvioEmailService extends SmtpEnvioEmailService {
 		String corpo = processarTemplate(mensagem);
 
 		log.info("[FAKE E-MAIL] Para: {}\n{}", mensagem.getDestinatarios(), corpo);
-	}
+	}*/
 }

@@ -1,23 +1,8 @@
 package com.algaworks.algafood.infrastructure.service.email;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-
-import com.algaworks.algafood.core.email.EmailProperties;
-import com.algaworks.algafood.domain.service.EnvioEmailService;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
-public class SmtpEnvioEmailService implements EnvioEmailService {
+public class SmtpEnvioEmailService {
 	
-	@Autowired
+	/*@Autowired
 	private JavaMailSender mailSender;
 
 	@Autowired
@@ -60,6 +45,6 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 		} catch (Exception e) {
 			throw new EmailException("Não foi possível montar o template do e-mail", e);
 		}				
-	}
+	}*/
 
 }

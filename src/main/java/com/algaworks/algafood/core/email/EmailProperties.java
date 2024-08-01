@@ -9,11 +9,11 @@ import org.springframework.validation.annotation.Validated;
 import lombok.Getter;
 import lombok.Setter;
 
-@Validated
+//@Validated
 @Getter
 @Setter
-@Component
-@ConfigurationProperties("algafood.email")
+//@Component
+//@ConfigurationProperties("algafood.email")
 public class EmailProperties {
 	
 	private Implementacao impl = Implementacao.FAKE;

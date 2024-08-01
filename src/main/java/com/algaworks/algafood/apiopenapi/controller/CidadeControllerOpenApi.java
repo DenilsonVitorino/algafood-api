@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.algaworks.algafood.api.exeptionhandler.Problem;
-import com.algaworks.algafood.api.model.CidadeModel;
-import com.algaworks.algafood.api.model.input.CidadeInput;
+import com.algaworks.algafood.api.v1.model.CidadeModel;
+import com.algaworks.algafood.api.v1.model.input.CidadeInput;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

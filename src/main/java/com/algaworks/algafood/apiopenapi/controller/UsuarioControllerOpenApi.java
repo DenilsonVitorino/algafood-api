@@ -3,10 +3,10 @@ package com.algaworks.algafood.apiopenapi.controller;
 import org.springframework.hateoas.CollectionModel;
 
 import com.algaworks.algafood.api.exeptionhandler.Problem;
-import com.algaworks.algafood.api.model.UsuarioModel;
-import com.algaworks.algafood.api.model.input.SenhaInput;
-import com.algaworks.algafood.api.model.input.UsuarioComSenhaInput;
-import com.algaworks.algafood.api.model.input.UsuarioInput;
+import com.algaworks.algafood.api.v1.model.UsuarioModel;
+import com.algaworks.algafood.api.v1.model.input.SenhaInput;
+import com.algaworks.algafood.api.v1.model.input.UsuarioComSenhaInput;
+import com.algaworks.algafood.api.v1.model.input.UsuarioInput;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
