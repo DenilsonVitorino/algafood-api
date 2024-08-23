@@ -1,0 +1,36 @@
+version: "3.9"
+
+networks:
+  algafood-network:
+    driver: bridge
+
+services:
+  algafood-mysql:
+    image: mysql/mysql-server:5.5
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: "admin"
+    ports:
+      - "3307:3306"
+    networks:
+      - algafood-network
+
+  algafood-api:
+    image: algafood-api
+    command: ["/wait-for-it.sh", "algafood-mysql:3307", "-t", "30", "--", "java", "-jar", "api.jar"]
+    environment:
+      DB_HOST: algafood-mysql    
+    networks:
+      - algafood-network
+    depends_on:
+      - algafood-mysql
+      
+  algafood-proxy:
+    build: ./nginx
+    image: algafood-proxy
+    ports:
+      - "80:80"
+    networks:
+      - algafood-network
+    depends_on:
+      - algafood-api          

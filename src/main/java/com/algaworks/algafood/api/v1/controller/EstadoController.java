@@ -24,6 +24,7 @@ import com.algaworks.algafood.api.v1.assembler.EstadoModelAssembler;
 import com.algaworks.algafood.api.v1.model.EstadoModel;
 import com.algaworks.algafood.api.v1.model.input.EstadoInput;
 import com.algaworks.algafood.apiopenapi.controller.EstadoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exeption.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exeption.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Estado;
@@ -46,6 +47,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 	@Autowired
 	private EstadoInputDisassembler estadoInputDisassembler;
 	
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping
 	public CollectionModel<EstadoModel> listar() {
 		List<Estado> todosEstados = estadoRepository.findAll();
@@ -53,12 +55,14 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return estadoModelAssembler.toCollectionModel(todosEstados);
 	}
 	
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping("/{estadoId}")
 	public EstadoModel buscar(@PathVariable Long estadoId) {
 		Estado estado = cadastroEstado.buscarOuFalhar(estadoId); 
 		return estadoModelAssembler.toModel(estado);
 	}
 	
+	@CheckSecurity.Estados.PodeEditar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
@@ -69,6 +73,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return estadoModelAssembler.toModel(estado);
 	}
 	
+	@CheckSecurity.Estados.PodeEditar
 	@PutMapping("/{estadoId}")
 	public EstadoModel atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);		
@@ -80,6 +85,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return estadoModelAssembler.toModel(estadoAtual); 		
 	}
 	
+	@CheckSecurity.Estados.PodeEditar
 	@DeleteMapping("/{estadoId}")
 	public ResponseEntity<?> remover(@PathVariable Long estadoId) {
 		try {
